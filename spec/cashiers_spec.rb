@@ -33,13 +33,17 @@ describe Cashier do
   it "will show the amount of each product the customer has purchased" do
     cashier1 = Cashier.create({:name => "Tom Smith"})
     customer1 = Customer.create({:name => "Jane Doe", :cashier_id => cashier1.id})
-    product1 = Product.create({:name => "Chocolate Bar", :price => 2.00 })
-    product2 = Product.create({:name => "Bread", :price => 4.50})
-    amount1 = 2
-    amount2 = 1
-    purchase1 = Purchase.create({:customer_id => customer1.id, :product_id => product1.id, :amount => amount1})
-    purchase2 = Purchase.create({:customer_id => customer1.id, :product_id => product2.id, :amount => amount2})
-    expect(cashier1.cost).to eq 8.50
+    product1 = Product.create({:name => "Chocolate Bar"})
+    product2 = Product.create({:name => "Bread", :amount => 2})
+    product3 = Product.create({:name => "Newspaper", :amount => 3})
+    purchase1 = Purchase.create({:product_id => product2.id, :customer_id => customer1.id})
+    purchase2 = Purchase.create({:product_id => product3.id, :customer_id => customer1.id})
+    customer1.purchases << purchase1
+    customer1.purchases << purchase2
+    expect(cashier1.purchases).to eq [purchase1, purchase2]
+    expect(cashier1.products[0].amount).to eq 2
+    expect(cashier1.products[1].amount).to eq 3
   end
+
 
 end
